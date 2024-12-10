@@ -1,0 +1,220 @@
+[language-server]
+
+dart = { command = "dart", args = ["language-server", "--client-id=helix"] }
+bash-language-server = { command = "bash-language-server", args = ["start"] }
+language-server = { command = "dotnet OmniSharp.dll", args = [ "--languageserver" ] }
+pylsp = { command = "pylsp" }
+vscode-css-language-server = { command = "vscode-css-language-server", args = ["--stdio"], config = { provideFormatter = true, css = { validate = { enable = true } } } }
+vscode-html-language-server = { command = "vscode-html-language-server", args = ["--stdio"], config = { provideFormatter = true } }
+vscode-json-language-server = { command = "vscode-json-language-server", args = ["--stdio"], config = { provideFormatter = true, json = { validate = { enable = true } } } }
+cmake-language-server = { command = "cmake-language-server" }
+jdtls = { command = "jdtls" }
+
+[language-server.omnisharp]
+command = "dotnet"
+args = [ "path/to/OmniSharp.dll", "--languageserver" ]
+
+[[language]]
+name = "rust"
+auto-format = true
+
+[language-server.rust-analyzer]
+command = "rust-analyzer"
+
+[language-server.rust-analyzer.config]
+inlayHints.bindingModeHints.enable = false
+inlayHints.closingBraceHints.minLines = 10
+inlayHints.closureReturnTypeHints.enable = "with_block"
+inlayHints.discriminantHints.enable = "fieldless"
+inlayHints.lifetimeElisionHints.enable = "skip_trivial"
+inlayHints.typeHints.hideClosureInitialization = false
+
+
+
+[[language]]
+name = "css"
+scope = "source.css"
+injection-regex = "css"
+file-types = ["css", "scss"]
+language-servers = [ "vscode-css-language-server" ]
+auto-format = true
+indent = { tab-width = 2, unit = "  " }
+
+[[grammar]]
+name = "css"
+source = { git = "https://github.com/tree-sitter/tree-sitter-css", rev = "769203d0f9abe1a9a691ac2b9fe4bb4397a73c51" }
+
+[[language]]
+name = "scss"
+scope = "source.scss"
+injection-regex = "scss"
+file-types = ["scss"]
+language-servers = [ "vscode-css-language-server" ]
+auto-format = true
+indent = { tab-width = 2, unit = "  " }
+
+[[grammar]]
+name = "scss"
+source = { git = "https://github.com/serenadeai/tree-sitter-scss", rev = "c478c6868648eff49eb04a4df90d703dc45b312a" }
+
+[[language]]
+name = "html"
+scope = "text.html.basic"
+injection-regex = "html"
+file-types = ["html", "htm", "shtml", "xhtml", "xht", "jsp", "asp", "aspx", "jshtm", "volt", "rhtml"]
+language-servers = [ "vscode-html-language-server" ]
+auto-format = true
+indent = { tab-width = 2, unit = "  " }
+
+[[grammar]]
+name = "html"
+source = { git = "https://github.com/tree-sitter/tree-sitter-html", rev = "29f53d8f4f2335e61bf6418ab8958dac3282077a" }
+
+[[language]]
+name = "python"
+scope = "source.python"
+injection-regex = "python"
+file-types = ["py","pyi","py3","pyw","ptl",".pythonstartup",".pythonrc","SConstruct", "rpy", "cpy", "ipy", "pyt", "SConscript"]
+shebangs = ["python"]
+roots = ["pyproject.toml", "setup.py", "poetry.lock", "pyrightconfig.json"]
+comment-token = "#"
+language-servers = [ "pylsp" ]
+# TODO: pyls needs utf-8 offsets
+indent = { tab-width = 4, unit = "    " }
+
+[[grammar]]
+name = "python"
+source = { git = "https://github.com/tree-sitter/tree-sitter-python", rev = "4bfdd9033a2225cc95032ce77066b7aeca9e2efc" }
+
+[[language]]
+name = "cmake"
+scope = "source.cmake"
+file-types = ["cmake", "CMakeLists.txt"]
+comment-token = "#"
+indent = { tab-width = 2, unit = "  " }
+language-servers = [ "cmake-language-server" ]
+injection-regex = "cmake"
+
+[[grammar]]
+name = "cmake"
+source = { git = "https://github.com/uyha/tree-sitter-cmake", rev = "6e51463ef3052dd3b328322c22172eda093727ad" }
+
+[[language]]
+name = "java"
+scope = "source.java"
+injection-regex = "java"
+file-types = ["java", "jav"]
+roots = ["pom.xml", "build.gradle", "build.gradle.kts"]
+language-servers = [ "jdtls" ]
+indent = { tab-width = 2, unit = "  " }
+
+[[grammar]]
+name = "java"
+source = { git = "https://github.com/tree-sitter/tree-sitter-java", rev = "09d650def6cdf7f479f4b78f595e9ef5b58ce31e" }
+
+[[language]]
+name = "javascript"
+scope = "source.js"
+injection-regex = "(js|javascript)"
+language-id = "javascript"
+file-types = ["js", "mjs", "cjs", "rules", "es6", "pac", "jakefile"]
+shebangs = ["node"]
+comment-token = "//"
+language-servers = [ "typescript-language-server" ]
+indent = { tab-width = 2, unit = "  " }
+
+[language.debugger]
+name = "node-debug2"
+transport = "stdio"
+# args consisting of cmd (node) and path to adapter should be added to user's configuration
+quirks = { absolute-paths = true }
+
+[[language.debugger.templates]]
+name = "source"
+request = "launch"
+completion = [ { name = "main", completion = "filename", default = "index.js" } ]
+args = { program = "{0}" }
+
+[[grammar]]
+name = "javascript"
+source = { git = "https://github.com/tree-sitter/tree-sitter-javascript", rev = "f772967f7b7bc7c28f845be2420a38472b16a8ee" }
+
+[[language]]
+name = "jsx"
+scope = "source.jsx"
+injection-regex = "jsx"
+language-id = "javascriptreact"
+file-types = ["jsx"]
+comment-token = "//"
+language-servers = [ "typescript-language-server" ]
+indent = { tab-width = 2, unit = "  " }
+grammar = "javascript"
+
+[[language]]
+name = "typescript"
+scope = "source.ts"
+injection-regex = "(ts|typescript)"
+file-types = ["ts", "mts", "cts"]
+language-id = "typescript"
+shebangs = ["deno", "ts-node"]
+language-servers = [ "typescript-language-server" ]
+indent = { tab-width = 2, unit = "  " }
+
+[[grammar]]
+name = "typescript"
+source = { git = "https://github.com/tree-sitter/tree-sitter-typescript", rev = "b1bf4825d9eaa0f3bdeb1e52f099533328acfbdf", subpath = "typescript" }
+
+
+[[language]]
+name = "bash"
+scope = "source.bash"
+injection-regex = "(shell|bash|zsh|sh)"
+file-types = [
+  "sh",
+  "bash",
+  "zsh",
+  ".bash_login",
+  ".bash_logout",
+  ".bash_profile",
+  ".bashrc",
+  ".profile",
+  ".zshenv",
+  "zshenv",
+  ".zlogin",
+  "zlogin",
+  ".zlogout",
+  "zlogout",
+  ".zprofile",
+  "zprofile",
+  ".zshrc",
+  "zshrc",
+  ".zimrc",
+  "APKBUILD",
+  "PKGBUILD",
+  "eclass",
+  "ebuild",
+  "bazelrc",
+  ".bash_aliases",
+  "Renviron",
+  ".Renviron",
+  ".xprofile",
+  ".xsession",
+  ".xsessionrc",
+  "zsh-theme",
+  "ksh",
+  "cshrc",
+  "tcshrc",
+  ".yashrc",
+  ".yash_profile",
+  ".hushlogin",
+  "bashrc_Apple_Terminal",
+  "zshrc_Apple_Terminal"
+]
+shebangs = ["sh", "bash", "dash", "zsh"]
+comment-token = "#"
+language-servers = [ "bash-language-server" ]
+indent = { tab-width = 2, unit = "  " }
+
+[[grammar]]
+name = "bash"
+source = { git = "https://github.com/tree-sitter/tree-sitter-bash", rev = "275effdfc0edce774acf7d481f9ea195c6c403cd" }
